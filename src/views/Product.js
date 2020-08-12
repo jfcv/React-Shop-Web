@@ -9,7 +9,8 @@ function Product() {
     const url = `https://5f333dd9cfaf5a001646a8b7.mockapi.io/api/v1/products/${id}`
     const [product, setProduct] = useState({
         loading: false,
-        data: null
+        data: null,
+        error: false
     })
 
     let content = null
@@ -18,17 +19,32 @@ function Product() {
 
         setProduct({
             loading: true,
-            data: null
+            data: null,
+            error: false
         })
 
         axios.get(url)
             .then(response => {
                 setProduct({
                     loading: false,
-                    data: response.data
+                    data: response.data,
+                    error: false
                 })
             })
+            .catch(() => {
+                setProduct({
+                    loading: false,
+                    data: null,
+                    error: true
+                })                    
+            })
     }, [url])
+
+    if (product.error) {
+        content = <p>
+            There was an error please refresh or try again later.
+        </p>
+    }
 
     if (product.loading) {
         content = 
